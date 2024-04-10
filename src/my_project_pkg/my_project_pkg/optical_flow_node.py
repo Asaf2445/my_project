@@ -353,16 +353,6 @@ class OpticalFlowVelNode(Node):
        self.frame = self.cv_bridge.compressed_imgmsg_to_cv2(image_msg,'bgr8')
        
 
-      #  h, w = self.frame.shape[:2]
-      #  newCameraMatrix, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, distortion_coefficients, (w, h), 1, (w, h))
-            
-
-      #       # crop the image
-      #  x, y, w, h = roi
-      #  dst = cv2.undistort(self.frame, camera_matrix, distortion_coefficients, None, camera_matrix)
-            
-      #  self.frame = dst[y:y + h, x:x + w]
-
     
        if self.frame_count == 1:
           end_time = time.time()
