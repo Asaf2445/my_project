@@ -35,21 +35,8 @@ class OpticalFlowVelNode(Node):
         super().__init__('optical_flow_run')
         self.declare_parameter("filter", value=1)
         self.filter = self.get_parameter("filter").value
-        #self.subscriber_= self.create_subscription(Image,'undistort_image',self.callback_image, 10)
         self.fisheye_subscriber= self.create_subscription(CompressedImage,'/fisheye_cam/image_raw/compressed',self.callback_image, 10)
         self.gyro_subscriber= self.create_subscription(Imu,'/imu/data',self.imu_callback, 10)
-
-
-        
-        # self.cam_sub = Subscriber(self, CompressedImage, '/fisheye_cam/image_raw/compressed')
-        # self.gyro_subscriber = Subscriber(self, Imu, '/imu/data' )
-        # self.sync = ApproximateTimeSynchronizer([self.cam_sub, self.gyro_subscriber], 10, 0.5, allow_headerless=True)
-        
-      
-
-        # self.sync.registerCallback(self.callback_image)
-
-
         
         self.publisher_ = self.create_publisher(Image,'process_image', 10)
 
@@ -189,14 +176,10 @@ class OpticalFlowVelNode(Node):
         u1 = static_features[:, 1, 0]
         v1 = static_features[:, 1, 1]
        
-
-        
         points1_fisheye_img = np.column_stack([u0, v0])
 
         points2_fisheye_img = np.column_stack((u1, v1))
 
-
-        
         #for undistorted image
         x1 = self.z/self.xfocal*(points1_fisheye_img[:,0]-self.Cx)
         y1 = self.z/self.yfocal*(points1_fisheye_img[:,1]-self.Cy)
@@ -208,12 +191,7 @@ class OpticalFlowVelNode(Node):
         points2 = np.column_stack((x2, y2))
         
         ave_dist1 = np.linalg.norm(points2- points1, 2, 1)
-       
-        #vector1 = np.array((float(np.mean(points2_undistorted_img[:,0])), float(np.mean(points2_undistorted_img[:,1]))))
-        #vector0 = np.array((float(np.mean(points1_undistorted_img[:,0])), float(np.mean(points1_undistorted_img[:,1])))) 
-        # r_vector1 = np.array((x2, y2))
-        # r_vector0 = np.array((x1, y1)) 
-        
+           
         vector1 = np.array((float(np.mean(u1)), float(np.mean(v1))))
         vector0 = np.array((float(np.mean(u0)), float(np.mean(v0))))
         vector = vector1 - vector0
@@ -335,12 +313,9 @@ class OpticalFlowVelNode(Node):
     #def callback_image(self, image_msg, imu_msg):
     def callback_image(self, image_msg):
        self.frame = self.cv_bridge.compressed_imgmsg_to_cv2(image_msg,'bgr8')
-       
-
        h, w = self.frame.shape[:2]
        newCameraMatrix, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, distortion_coefficients, (w, h), 1, (w, h))
-            
-
+          
             # crop the image
        x, y, w, h = roi
        dst = cv2.undistort(self.frame, camera_matrix, distortion_coefficients, None, camera_matrix)
