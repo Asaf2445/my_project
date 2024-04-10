@@ -384,8 +384,8 @@ class OpticalFlowVelNode(Node):
            self.P = np.dot((np.eye(4) - np.dot(K_k, self.H)), self.P)
          
            
-           #self.publish_marker(self.X[:2,0], self.angle, "with_filter")
-           self.publish_marker(real_vector, self.angle, "without_filter")
+           self.publish_marker(self.X[:2,0], self.angle, "with_filter")
+           #self.publish_marker(real_vector, self.angle, "without_filter")
 
 
            self.distance += np.linalg.norm(real_vector)
