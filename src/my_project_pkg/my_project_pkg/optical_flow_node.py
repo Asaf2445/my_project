@@ -194,34 +194,17 @@ class OpticalFlowVelNode(Node):
 
         points2_fisheye_img = np.column_stack((u1, v1))
 
-      
-        points1_undistorted_img = cv2.undistortPoints(points1_fisheye_img, camera_matrix, distortion_coefficients, R=None, P=None)
-        points2_undistorted_img = cv2.undistortPoints(points2_fisheye_img, camera_matrix, distortion_coefficients, R=None, P=None)
-        points1_undistorted_img = np.column_stack([points1_undistorted_img[:, 0, 0], points1_undistorted_img[:, 0, 1]])
-        points2_undistorted_img = np.column_stack([points2_undistorted_img[:, 0, 0], points2_undistorted_img[:, 0, 1]])
-        points1_undistorted_img[:,0] = points1_undistorted_img[:,0]*camera_matrix[0,0] + camera_matrix[0,2]
-        points1_undistorted_img[:,1] = points1_undistorted_img[:,1]*camera_matrix[1,1] + camera_matrix[1,2]
 
-        points2_undistorted_img[:,0] = points2_undistorted_img[:,0]*camera_matrix[0,0] + camera_matrix[0,2]
-        points2_undistorted_img[:,1] = points2_undistorted_img[:,1]*camera_matrix[1,1] + camera_matrix[1,2]
-
-        #for fisheye image
-        x1 = self.z/self.xfocal*(points1_undistorted_img[:,0]-self.Cx)
-        y1 = self.z/self.yfocal*(points1_undistorted_img[:,1]-self.Cy)
-        x2 = self.z/self.xfocal*(points2_undistorted_img[:,0]-self.Cx)
-        y2 = self.z/self.yfocal*(points2_undistorted_img[:,1]-self.Cy)
         
         #for undistorted image
-        # x1 = self.z/self.xfocal*(points1_fisheye_img[:,0]-self.Cx)
-        # y1 = self.z/self.yfocal*(points1_fisheye_img[:,1]-self.Cy)
-        # x2 = self.z/self.xfocal*(points2_fisheye_img[:,0]-self.Cx)
-        # y2 = self.z/self.yfocal*(points2_fisheye_img[:,1]-self.Cy)
+        x1 = self.z/self.xfocal*(points1_fisheye_img[:,0]-self.Cx)
+        y1 = self.z/self.yfocal*(points1_fisheye_img[:,1]-self.Cy)
+        x2 = self.z/self.xfocal*(points2_fisheye_img[:,0]-self.Cx)
+        y2 = self.z/self.yfocal*(points2_fisheye_img[:,1]-self.Cy)
 
 # Extract the undistorted points        
         points1 = np.column_stack((x1, y1))
         points2 = np.column_stack((x2, y2))
-        
-        ave_dist = np.linalg.norm( points2_undistorted_img - points1_undistorted_img, 2, 1)
         
         ave_dist1 = np.linalg.norm(points2- points1, 2, 1)
        
@@ -352,6 +335,16 @@ class OpticalFlowVelNode(Node):
     def callback_image(self, image_msg):
        self.frame = self.cv_bridge.compressed_imgmsg_to_cv2(image_msg,'bgr8')
        
+
+       h, w = self.frame.shape[:2]
+       newCameraMatrix, roi = cv2.getOptimalNewCameraMatrix(camera_matrix, distortion_coefficients, (w, h), 1, (w, h))
+            
+
+            # crop the image
+       x, y, w, h = roi
+       dst = cv2.undistort(self.frame, camera_matrix, distortion_coefficients, None, camera_matrix)
+            
+       self.frame = dst[y:y + h, x:x + w]
 
     
        if self.frame_count == 1:
