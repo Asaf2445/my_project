@@ -33,7 +33,7 @@ from message_filters import ApproximateTimeSynchronizer, Subscriber
 class OpticalFlowVelNode(Node):
     def __init__(self):
         super().__init__('optical_flow_run')
-        self.declare_parameters("filter",parameters="filter")
+        self.declare_parameter("filter")
         #self.subscriber_= self.create_subscription(Image,'undistort_image',self.callback_image, 10)
         self.fisheye_subscriber= self.create_subscription(CompressedImage,'/fisheye_cam/image_raw/compressed',self.callback_image, 10)
         self.gyro_subscriber= self.create_subscription(Imu,'/imu/data',self.imu_callback, 10)
@@ -401,8 +401,8 @@ class OpticalFlowVelNode(Node):
            self.P = np.dot((np.eye(4) - np.dot(K_k, self.H)), self.P)
          
            
-           #self.publish_marker(self.X[:2,0], self.angle, "with_filter")
-           self.publish_marker(real_vector, self.angle, "without_filter")
+           self.publish_marker(self.X[:2,0], self.angle, "with_filter")
+           #self.publish_marker(real_vector, self.angle, "without_filter")
 
 
            self.distance += np.linalg.norm(real_vector)
