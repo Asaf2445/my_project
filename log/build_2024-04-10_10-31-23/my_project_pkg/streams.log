@@ -1,0 +1,17 @@
+[0.484s] Invoking command in '/home/asaf/ros2_project/build/my_project_pkg': PYTHONPATH=/home/asaf/ros2_project/build/my_project_pkg/prefix_override:/home/asaf/ros2_project/install/my_project_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/asaf/ros2_project/build/my_project_pkg/build --no-deps install_data
+[0.657s] running develop
+[0.755s] running egg_info
+[0.755s] writing my_project_pkg.egg-info/PKG-INFO
+[0.755s] writing dependency_links to my_project_pkg.egg-info/dependency_links.txt
+[0.755s] writing entry points to my_project_pkg.egg-info/entry_points.txt
+[0.755s] writing requirements to my_project_pkg.egg-info/requires.txt
+[0.755s] writing top-level names to my_project_pkg.egg-info/top_level.txt
+[0.756s] reading manifest file 'my_project_pkg.egg-info/SOURCES.txt'
+[0.757s] writing manifest file 'my_project_pkg.egg-info/SOURCES.txt'
+[0.757s] running build_ext
+[0.758s] Creating /home/asaf/ros2_project/install/my_project_pkg/lib/python3.10/site-packages/my-project-pkg.egg-link (link to .)
+[0.758s] Installing optical_flow_run script to /home/asaf/ros2_project/install/my_project_pkg/lib/my_project_pkg
+[0.758s] 
+[0.758s] Installed /home/asaf/ros2_project/build/my_project_pkg
+[0.758s] running install_data
+[0.780s] Invoked command in '/home/asaf/ros2_project/build/my_project_pkg' returned '0': PYTHONPATH=/home/asaf/ros2_project/build/my_project_pkg/prefix_override:/home/asaf/ros2_project/install/my_project_pkg/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py develop --editable --build-directory /home/asaf/ros2_project/build/my_project_pkg/build --no-deps install_data
